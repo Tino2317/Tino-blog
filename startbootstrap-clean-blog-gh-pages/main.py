@@ -2,13 +2,16 @@ from flask import Flask, render_template, request
 import requests
 import smtplib
 from blogs import Blog
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 blog_data = Blog()
 app = Flask(__name__)
 
-LOGIN_EMAIL = "cheezy660@gmail.com"
-SEND_EMAIL = "tmugwazo10@gmail.com"
-PASSWORD = "pldqhzxgokijmhnp"
+LOGIN_EMAIL = os.environ.get("LOGIN_EMAIL")
+SEND_EMAIL = os.environ.get("SEND_EMAIL")
+PASSWORD = os.environ.get("PASSWORD")
 
 
 @app.route('/')
