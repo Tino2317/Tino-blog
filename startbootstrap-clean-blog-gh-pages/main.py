@@ -1,18 +1,9 @@
 from flask import Flask, render_template, request
 import requests
-import smtplib
 from blogs import Blog
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 blog_data = Blog()
 app = Flask(__name__)
-
-LOGIN_EMAIL = os.environ.get("LOGIN_EMAIL")
-SEND_EMAIL = os.environ.get("SEND_EMAIL")
-PASSWORD = os.environ.get("PASSWORD")
-
 
 @app.route('/')
 def home_page():
@@ -42,25 +33,6 @@ def blog_type(num):
     elif num == 3:
         data = blog_data.third_blog()
         return render_template("post.html", data=data)
-
-
-@app.route('/contact', methods=["POST", "GET"])
-def receive_data():
-    if request.method == "POST":
-        data = request.form
-        send_email(data["name"], data["email"], data["phone"], data["message"])
-        return render_template("contact.html", msg_sent=True)
-    return render_template("contact.html", msg_sent=False)
-
-
-def send_email(name, email, phone, message):
-    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(LOGIN_EMAIL, PASSWORD)
-        connection.sendmail(from_addr=LOGIN_EMAIL,
-                            to_addrs=SEND_EMAIL,
-                            msg=email_message)
 
 
 if __name__ == "__main__":
